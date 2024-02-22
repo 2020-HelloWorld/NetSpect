@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <style>
+            body {
+            font-family: "PT Mono", monospace;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #000000, #ffffff); /* Gradient background from black to white */
+            color: white; /* Set text color to white */
+        }
+    
+        .background {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .container {
+            background-color: rgba(0, 0, 0, 0.724); /* Set background color to black */
+            border-radius: 10px;
+            width: 30%;
+            box-shadow: 0px 10px 10px grey;
+            color: white; /* Set text color to white */
+            text-align: center;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    
+        .input-container {
+            text-align: left;
+            margin: 5px 0;
+            width: 100%;
+        }
+    
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid white; /* Set border color to white */
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: black; /* Set background color to black */
+            color: white; /* Set text color to white */
+        }
+    
+        .form-class {
+            width: 70%;
+        }
+    
+        button {
+            background-color: black; /* Set background color to black */
+            color: white;
+            border: 1px solid white; /* Set border color to white */
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: "PT Mono", monospace;
+        }
+    
+        button:hover {
+            background-color: white; /* Set background color to white on hover */
+            color: black; /* Set text color to black on hover */
+        }
+    
+        p {
+            font-size: 14px;
+            margin-top: 20px;
+            color: white; /* Set text color to white */
+        }
+    
+        a {
+            text-decoration: none;
+            color: white; /* Set text color to white */
+        }
+    
+        a:hover {
+            text-decoration: underline;
+        }
+    
+    </style>
+    
+</head>
+<body>
+    <div class="background">
+        <div class="container">
+            <form action="/login/" method="POST" class="form-class">
+                {% csrf_token %}
+                <h1>Login</h1>
+                <div class="input-container">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        color: #444;
+        background: #ecf0f1;
+        font: 300 18px/18px Roboto, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      p {
+        font: 300 18px/18px Roboto, sans-serif;
+      }
+      *,
+      :after,
+      :before {
+        box-sizing: border-box;
+      }
+      .pull-left {
+        float: left;
+      }
+      .pull-right {
+        float: right;
+      }
+      .clearfix:after,
+      .clearfix:before {
+        content: "";
+        display: table;
+      }
+      .clearfix:after {
+        clear: both;
+        display: block;
+      }
+
+      .clock:before,
+      .count:after {
+        content: "";
+        position: absolute;
+      }
+      .clock-wrap {
+        display: none;
+        margin: 500px auto;
+        width: 240px;
+        height: 240px;
+        margin-top: 100px;
+        position: relative;
+        border-radius: 50px;
+        background-color: #fff;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+      }
+      .clock {
+        top: 50%;
+        left: 50%;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        position: absolute;
+        margin-top: -90px;
+        margin-left: -90px;
+        background-color: white;
+      }
+      .clock:before {
+        top: 50%;
+        left: 50%;
+        width: 120px;
+        height: 120px;
+        margin-top: -60px;
+        margin-left: -60px;
+        border-radius: inherit;
+        background-color: black;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15),
+          0 0 3px rgba(255, 255, 255, 0.75) inset;
+        /* border:1px solid rgba(255,255,255,.1); */
+      }
+      .count {
+        width: 100%;
+        color: #fff;
+        height: 100%;
+        padding: 50px;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 50px;
+        position: absolute;
+        text-align: center;
+      }
+      .count:after {
+        width: 100%;
+        display: block;
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 18px;
+        text-align: center;
+        position: relative;
+      }
+      .count.sec:after {
+        content: "sec";
+      }
+      .count.min:after {
+        content: "min";
+      }
+
+      .action .input {
+        margin-top: 30px;
+        position: relative;
+      }
+      .action .input-num {
+        width: 100%;
+        border: none;
+        padding: 12px;
+        border-radius: 60px;
+      }
+
+      .tbl {
+        display: table;
+        width: 100%;
+      }
+      .tbl .col {
+        display: table-cell;
+      }
+
+      @import url("https://fonts.googleapis.com/css?family=PT+Mono|PT+Sans");
+
+      :root {
+        --color-primary: hsl(203, 100%, 38%);
+        --color-text: hsl(203, 30%, 15%);
+        --color-background: hsl(203, 100%, 98%);
+        --color-border: hsl(203, 33%, 83%);
+        --color-white: #fff;
+      }
+
+      body {
+        font-family: "PT Sans", sans-serif;
+        color: var(--color-text);
+        background-color: var(--color-background);
+        font-size: 1rem;
+      }
+
+      .table__wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .action {
+        margin: 1rem auto;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-inline: 1rem;
+        /* max-width: 200px; */
+      }
+
+      .input-btn {
+        top: 0;
+        right: 0;
+        color: black;
+        box-shadow: 5px 5px #444;
+        border: none;
+        padding: 12px;
+        /* position: absolute; */
+        border-radius: 60px;
+        margin: 0 auto;
+        /* width: 250px; */
+        background-color: silver;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .table {
+        background-color: var(--color-white);
+        width: 100%;
+        border-radius: 4px;
+        border-collapse: collapse;
+        max-width: 800px;
+        margin: 0 auto;
+        /* margin-top: 4rem; */
+        box-shadow: 0 2px 10px rgba(0, 67, 115, 0.2);
+      }
+
+      .table__header {
+        text-transform: uppercase;
+        font-weight: normal;
+        font-size: 0.75rem;
+      }
+
+      .table__link {
+        text-decoration: none;
+        color: var(--color-primary);
+      }
+
+      .table__row {
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .table__row--last {
+        border-bottom: 0;
+      }
+
+      .table__cell {
+        padding: 1rem 1.5rem;
+      }
+
+      .u-text-left {
+        text-align: left;
+      }
+
+      .u-text-right {
+        text-align: right;
+      }
+
+      .u-text-center {
+        text-align: center;
+      }
+
+      .u-font-mono {
+        font-family: "PT Mono", monospace;
+      }
+
+      .btn {
+        background-color: transparent;
+        box-shadow: 0 0 0 1px var(--color-primary) inset;
+        text-align: center;
+        color: var(--color-primary);
+        display: inline-block;
+        margin: 0;
+        padding: 8px 16px;
+        font-size: 0.75rem;
+        position: relative;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-decoration: none;
+        line-height: 20px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      @media only screen and (max-width: 650px) {
+        html {
+          font-size: 14px;
+        }
+
+        .table__header {
+          display: none;
+        }
+
+        .table__row {
+          display: grid;
+          grid-template-columns: 2fr 2fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          grid-column-gap: 1rem;
+          align-items: center;
+          padding: 1rem;
+        }
+
+        .table__cell {
+          padding: 0;
+        }
+
+        .table__account {
+          grid-column: 1;
+          grid-row: span 2;
+        }
+
+        .table__account-content {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .table__account-number {
+          order: 2;
+          font-size: 12px;
+          padding-top: 0.25rem;
+        }
+
+        .table__balance {
+          grid-column: 2;
+          grid-row: 2;
+          font-size: 0.75rem;
+          padding-top: 0.125rem;
+        }
+
+        .table__balance::before {
+          content: "Balance: ";
+        }
+
+        .table__available {
+          grid-column: 2;
+          grid-row: 1;
+          padding-bottom: 0.125rem;
+        }
+
+        .table__limit {
+          display: none;
+        }
+
+        .table__transfer {
+          grid-column: 3;
+          grid-row: span 2;
+        }
+      }
+      .text-center {
+        text-align: center;
+      }
+
+      input[type="checkbox"] {
+        height: 0;
+        width: 0px;
+        visibility: hidden;
+      }
+
+      label {
+        cursor: pointer;
+        text-indent: -9999px;
+        width: 50px;
+        height: 25px;
+        background: grey;
+        display: block;
+        border-radius: 50px;
+        position: relative;
+        /* left: 650px; */
+      }
+
+      label:after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 15px;
+        height: 15px;
+        background: #fff;
+        border-radius: 90px;
+        transition: 0.3s;
+      }
+
+      input:checked + label {
+        background: black;
+      }
+
+      input:checked + label:after {
+        left: calc(100% - 5px);
+        transform: translateX(-100%);
+      }
+
+      label:active:after {
+        width: 100px;
+      }
+
+      button {
+            background-color: black; /* Set background color to black */
+            color: white;
+            border: 1px solid white; /* Set border color to white */
+            border-radius: 5px;
+            justify-content: center;
+            display: flex;
+            padding: 10px 20px;
+            width: 5rem;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: "PT Mono", monospace;
+        }
+    
+        button:hover {
+            background-color: grey; /* Set background color to white on hover */
+            color: black; /* Set text color to black on hover */
+        }
+    </style>
+  </head>
+  <body>
+    <button onclick="logout()">Logout</button>
+    <div class="action">
+      <p class="u-font-mono">Override TCP Timestamp value</p>
+      <input
+        type="checkbox"
+        id="switch"
+        onchange="handleSwitchChange(1)"
+      /><label for="switch"></label>
+      <div class="input">
+        <!-- <input
+            class="input-num"
+            type="number"
+            min="1"
+            placeholder="Enter Minute"
+          /> -->
+      </div>
+    </div>
+
+    <input
+      data-action="start"
+      class="input-btn u-font-mono"
+      type="button"
+      value="Start Covert Flow Analysis"
+    />
+
+    <br />
+    <br />
+    <br />
+
+    <div class="clock-wrap">
+      <div class="clock pro-0">
+        <span class="count">0</span>
+      </div>
+    </div>
+
+    <div class="table__wrap">
+      <div
+        style="
+          display: flex;
+          justify-content: space-around;
+          flex-direction: row;
+          width: 60%;
+        "
+      >
+        <div>
+          <!-- <p>xyz</p> -->
+          <p class="u-font-mono">TTL Covert Channel</p>
+          <p class="u-font-mono">Prevention</p>
+          <input
+            type="checkbox"
+            id="switch-two"
+            name="switch-two"
+            onchange="handleSwitchChange(2)"
+            style="margin: 0"
+          /><label for="switch-two" style="margin: 0"></label>
+        </div>
+        <div>
+          <p class="u-font-mono">Packet Delay Covert</p>
+          <p class="u-font-mono">Channel Prevention</p>
+          <input
+            type="checkbox"
+            id="switch-three"
+            name="switch-three"
+            onchange="handleSwitchChange(3)"
+          /><label for="switch-three"></label>
+        </div>
+      </div>
+      <table class="table">
+        <thead class="table__header">
+          <tr class="table__row">
+            <th class="table__cell u-text-left">Source IP</th>
+            <th class="table__cell u-text-left">Destination IP</th>
+            <th class="table__cell u-text-right">Status</th>
+            <th class="table__cell u-text-right">Type</th>
+            <!-- <th class="table__cell u-text-right">Action</th> -->
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- <tr class="table__row">
+            <td class="table__account table__cell">
+              <span class="table__account-name">10.0.2.5</span>
+            </td>
+            <td class="table__balance table__cell u-text-left u-font-mono">
+              <span class="num_negative">10.0.2.6</span>
+            </td>
+            <td class="table__limit table__cell u-text-right u-font-mono">
+              Covert
+            </td>
+            <td class="table__limit table__cell u-text-right u-font-mono">
+              TTL / IAT
+            </td>
+            <td class="table__transfer table__cell u-text-right">
+              <a class="btn" href="#">Add Delay</a>
+            </td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </body>
+  <script>
+    $step = 1;
+    $loops = Math.round(100 / $step);
+    $increment = 360 / $loops;
+    $half = Math.round($loops / 2);
+    $barColor = "grey";
+    $backColor = "white";
+
+    function logout(){
+      const csrfToken = getCookie("csrftoken");
+      fetch("/logout/", {
+          method: "GET",
+          headers: {
+            "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
+          },
+        }).then((response)=>{
+          window.location.href = "/login/"
+        })
+    }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    function handleAnalysisStart() {}
+    function handleSwitchChange(switchNo) {
+      console.log("Pressed switch:", switchNo);
+      if (switchNo === 1) {
+        // Handle query for TCP
+
+        var formData = new FormData();
+        formData.append("value", $("#switch").is(":checked"));
+
+        // Make a POST request with the FormData
+        const csrfToken = getCookie("csrftoken");
+        fetch("/ccpro/tcp/override/", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((data) => {
+            console.log("Response data:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else if (switchNo === 2) {
+        $("#switch-two").prop("disabled", true);
+        var formData = new FormData();
+        formData.append("value", $("#switch-two").is(":checked"));
+
+        // Make a POST request with the FormData
+        const csrfToken = getCookie("csrftoken");
+        fetch("/ccpro/ttl/override/", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((data) => {
+            console.log("Response data:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        $("#switch-three").prop("disabled", true);
+        var formData = new FormData();
+        formData.append("value", $("#switch-three").is(":checked"));
+
+        // Make a POST request with the FormData
+        const csrfToken = getCookie("csrftoken");
+        fetch("/ccpro/delay/override/", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((data) => {
+            console.log("Response data:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    }
+
+    $(function () {
+      clock.init();
+    });
+    clock = {
+      interval: null,
+      init: function () {
+        $(".input-btn").click(function () {
+          switch ($(this).data("action")) {
+            case "start":
+              clock.stop();
+              //   clock.start($(".input-num").val());
+              // GB
+              $("#switch-two").prop("disabled", false);
+              $("#switch-two").prop("checked", false);
+
+              $("#switch-three").prop("disabled", false);
+              $("#switch-three").prop("checked", false);
+
+              $(".clock-wrap").css({
+                display: "flex",
+                "flex-direction": "column",
+                gap: "1rem",
+              });
+
+              $(".table__wrap").css({
+                display: "none",
+              });
+
+              $(".input-btn").css({
+                display: "none",
+              });
+              handleAnalysisStart();
+              clock.start(5);
+              var formData = new FormData();
+              formData.append("value", true);
+
+              // Make a POST request with the FormData
+              const csrfToken = getCookie("csrftoken");
+              fetch("/ccpro/detect/", {
+                method: "POST",
+                body: formData,
+                headers: {
+                  "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
+                },
+              })
+                .then((response) => {
+                  clearInterval(clock.interval);
+                  $(".count").text(0);
+                  $(".clock").removeAttr("style");
+
+                  // GB
+                  $(".clock-wrap").css({
+                    display: "none",
+                  });
+                  $(".input-btn").css({
+                    display: "block",
+                  });
+                  $(".table__wrap").css({
+                    display: "flex",
+                    "justify-content": "center",
+                    "align-items": "center",
+                  });
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                  }
+                  return response.text();
+                })
+                .then((data) => {
+                  console.log("Response data:", JSON.parse(data));
+                  var tableBody = $("tbody");
+                  tableBody.empty();
+                  // Iterate through the received JSON data and append rows to the table
+                  JSON.parse(data).data.forEach(function (item) {
+                    // Create a new table row
+                    var newRow = $("<tr class='table__row'>");
+
+                    // Append cells to the row with data from the JSON response
+                    newRow.append(
+                      "<td class='table__account table__cell'><span class='table__account-name'>" +
+                        item.src +
+                        "</span></td>"
+                    );
+                    newRow.append(
+                      "<td class='table__balance table__cell u-text-left u-font-mono'><span class='num_negative'>" +
+                        item.dst +
+                        "</span></td>"
+                    );
+                    newRow.append(
+                      "<td class='table__limit table__cell u-text-right u-font-mono'>" +
+                        item.status +
+                        "</td>"
+                    );
+                    newRow.append(
+                      "<td class='table__limit table__cell u-text-right u-font-mono'>" +
+                        item.type +
+                        "</td>"
+                    );
+
+                    // Append the new row to the table body
+                    tableBody.append(newRow);
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+              break;
+            case "stop":
+              clock.stop();
+              break;
+          }
+        });
+      },
+      start: function (t) {
+        var pie = 0;
+        var num = 0;
+        var min = t ? t : 1;
+        var sec = min * 60;
+        var lop = sec;
+        $(".count").text(min);
+        if (min > 0) {
+          $(".count").addClass("min");
+        } else {
+          $(".count").addClass("sec");
+        }
+        clock.interval = setInterval(function () {
+          sec = sec - 1;
+          if (min > 1) {
+            pie = pie + 100 / (lop / min);
+          } else {
+            pie = pie + 100 / lop;
+          }
+          if (pie >= 101) {
+            pie = 1;
+          }
+          num = (sec / 60).toFixed(2).slice(0, -3);
+          if (num == 0) {
+            $(".count").removeClass("min").addClass("sec").text(sec);
+          } else {
+            $(".count").removeClass("sec").addClass("min").text(num);
+          }
+
+          $i = pie.toFixed(2).slice(0, -3) - 1;
+          if ($i < $half) {
+            $nextdeg = 90 + $increment * $i + "deg";
+            $(".clock").css({
+              "background-image":
+                "linear-gradient(90deg," +
+                $backColor +
+                " 50%,transparent 50%,transparent),linear-gradient(" +
+                $nextdeg +
+                "," +
+                $barColor +
+                " 50%," +
+                $backColor +
+                " 50%," +
+                $backColor +
+                ")",
+            });
+          } else {
+            $nextdeg = -90 + $increment * ($i - $half) + "deg";
+            $(".clock").css({
+              "background-image":
+                "linear-gradient(" +
+                $nextdeg +
+                "," +
+                $barColor +
+                " 50%,transparent 50%,transparent),linear-gradient(270deg," +
+                $barColor +
+                " 50%," +
+                $backColor +
+                " 50%," +
+                $backColor +
+                ")",
+            });
+          }
+          if (sec == 0) {
+            clearInterval(clock.interval);
+            $(".count").text(0);
+            $(".clock").removeAttr("style");
+
+            // GB
+            $(".clock-wrap").css({
+              display: "none",
+            });
+            $(".input-btn").css({
+              display: "block",
+            });
+            $(".table__wrap").css({
+              display: "flex",
+              "justify-content": "center",
+              "align-items": "center",
+            });
+          }
+        }, 1000);
+      },
+      stop: function () {
+        clearInterval(clock.interval);
+        $(".count").text(0);
+        $(".clock").removeAttr("style");
+      },
+    };
+  </script>
+</html>

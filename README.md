@@ -16,3 +16,4 @@ false positives and improving accuracy of the system by developing a machine lea
 - The first layer targets covert communication prevention by addressing the communication based on modification of timing-related values in packet headers, specifically TTL values and TCP Timestamps. 
 - Layer two aims at the detection and prevention of IAT-based covert communication using Machine Learning, Decision Tree model to obtain classification rules for detection purposes.
 
+[Presentation](https://www.canva.com/design/DAF9hsGU8G4/RL1L1kRqMNvUjyGEbipFlw/edit?utm_content=DAF9hsGU8G4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)

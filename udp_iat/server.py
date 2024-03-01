@@ -28,7 +28,7 @@ while True:
     if p==0:
         p = 1
     else:
-        if diff<1:
+        if diff<0.15:
             l.append(0)
         else:
             l.append(1)

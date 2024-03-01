@@ -1,0 +1,1 @@
+cmd_/home/okran/Desktop/Final/CovertChannelDetection/ttl_prevent/Module.symvers :=  scripts/mod/modpost -m -a     -o /home/okran/Desktop/Final/CovertChannelDetection/ttl_prevent/Module.symvers -T /home/okran/Desktop/Final/CovertChannelDetection/ttl_prevent/modules.order -i Module.symvers -e 

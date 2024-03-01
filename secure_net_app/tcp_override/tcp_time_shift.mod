@@ -1,1 +1,0 @@
-/home/gb/Covert_Channel_Detection_and_Prevention/CovertChannelDetection/tcp_override/tcp_time_shift.o

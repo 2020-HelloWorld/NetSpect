@@ -1,0 +1,1 @@
+cmd_/home/okran/Desktop/Final/CovertChannelDetection/ttl_prevent/prevent_ttl.mod := printf '%s\n'   prevent_ttl.o | awk '!x[$$0]++ { print("/home/okran/Desktop/Final/CovertChannelDetection/ttl_prevent/"$$0) }' > /home/okran/Desktop/Final/CovertChannelDetection/ttl_prevent/prevent_ttl.mod

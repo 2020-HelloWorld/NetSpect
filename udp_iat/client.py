@@ -62,7 +62,7 @@ print(covert_bits)
 def modify_timing(pkt, bit):
     # set last bit of time field to bit value
     if bit:
-        sleep(1)
+        sleep(0.15)
     send(pkt)
 
 # function to send TCP packet with covert bit

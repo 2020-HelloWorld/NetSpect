@@ -1,6 +1,6 @@
-# Scale +91 Hackathon
+# NetSpect
 ## Team Pesumists
-Repository for AI based threat protection for Scale +91 Hackathon
+Repository for AI based threat protection against covert channels
 
 ## Problem 
 In the era of next-generation firewalls, being efficient in firewall configuration is the need of the hour for an organisation. Even if the firewalls are correctly configured, there is a high probability that illegal data might go undetected inside the network.
